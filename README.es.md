@@ -3,7 +3,7 @@
 # tasas-ve-mcp
 
 **Las tasas de Venezuela para tu asistente de IA, en una línea.**
-Tasa oficial del BCV (USD, EUR) y la referencia de mercado USDT P2P, como servidor MCP, comando de terminal y librería de Python.
+Tasa oficial del BCV (USD, EUR), **la tasa de compra y venta de cada banco venezolano** y la referencia de mercado USDT P2P, como servidor MCP, comando de terminal y librería de Python.
 
 [English](README.md) · [Español](README.es.md)
 
@@ -35,6 +35,7 @@ Necesitas [uv](https://docs.astral.sh/uv/) (o `pip install git+https://github.co
 ```bash
 uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve
 uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve 100 USD VES
+uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve --bancos   # tasa por banco
 uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve 5000 VES USD --p2p
 ```
 
@@ -46,6 +47,7 @@ uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve-mcp --http --
 | Endpoint | Ejemplo |
 |---|---|
 | `GET /api/tasas` | Tasas BCV y P2P |
+| `GET /api/bancos` | Compra y venta por banco + promedio |
 | `GET /api/convertir` | `/api/convertir?monto=100&de=USD&a=VES&fuente=bcv` |
 | `GET /salud` | Estado del servicio |
 
@@ -60,6 +62,7 @@ const { resultado, tasa_usada } = await r.json();
 | Herramienta | Qué hace |
 |---|---|
 | `tasa_bcv` | Tasa oficial del BCV: Bs por 1 USD y 1 EUR |
+| `tasas_bancos` | Compra y venta (Bs/USD) que reporta cada banco al BCV: Mercantil, Banesco, BNC, Provincial, BanCaribe… y el promedio |
 | `tasa_p2p` | Referencia USDT/VES (mediana de anuncios P2P, venta o compra) |
 | `convertir` | Convierte entre VES, USD, EUR y USDT con `bcv` o `p2p` |
 | `brecha_cambiaria` | Diferencia (%) entre la tasa oficial y la referencia P2P |
@@ -71,7 +74,7 @@ const { resultado, tasa_usada } = await r.json();
 - **No se cae contigo.** Si la fuente falla, tus sistemas siguen con el último valor conocido.
 
 ## Fuentes y aviso
-- **BCV:** página pública `bcv.org.ve`. Si su certificado TLS no se puede verificar, la respuesta lo indica.
+- **BCV y bancos:** página pública `bcv.org.ve` (tasa oficial y *Tasas Informativas del Sistema Bancario*). Si su certificado TLS no se puede verificar, la respuesta lo indica.
 - **P2P:** listado público de anuncios P2P de Binance. Es una **referencia de mercado, no una tasa oficial**. Sin afiliación con el BCV ni con Binance.
 - Las tasas son informativas. Verifica la fuente oficial antes de usarlas con fines legales o contables.
 

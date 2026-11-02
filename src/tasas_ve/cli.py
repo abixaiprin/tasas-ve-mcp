@@ -4,6 +4,7 @@
   tasas-ve 100 USD VES     → convierte 100 USD a bolívares (BCV)
   tasas-ve 5000 VES USD --p2p
   tasas-ve --json
+  tasas-ve --bancos        → compra y venta por banco
 """
 from __future__ import annotations
 
@@ -21,9 +22,20 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("a", nargs="?")
     p.add_argument("--p2p", action="store_true", help="usar la referencia P2P en vez del BCV")
     p.add_argument("--json", action="store_true", help="salida en JSON")
+    p.add_argument("--bancos", action="store_true", help="tasas de compra y venta por banco")
     a = p.parse_args(argv)
     s = Servicio()
     try:
+        if a.bancos:
+            r = s.bancos()
+            if a.json:
+                print(json.dumps(r, ensure_ascii=False, indent=2))
+                return 0
+            print(f"{'Banco':<32}{'Compra':>12}{'Venta':>12}")
+            for f in r["bancos"]:
+                print(f"{f['banco'][:31]:<32}{f['compra']:>12,.4f}{f['venta']:>12,.4f}")
+            print(f"{'Promedio':<32}{r['promedio_compra']:>12,.4f}{r['promedio_venta']:>12,.4f}")
+            return 0
         if a.monto is not None:
             if not (a.de and a.a):
                 p.error("indica monto, moneda de origen y destino: tasas-ve 100 USD VES")

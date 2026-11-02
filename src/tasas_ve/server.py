@@ -13,7 +13,7 @@ from .servicio import Servicio
 mcp = MCPServer(
     name="tasas-ve",
     title="Tasas de Venezuela",
-    description="Tasa oficial del BCV (USD, EUR) y referencia USDT P2P, con conversión de montos.",
+    description="Tasa oficial del BCV (USD, EUR), tasas por banco y referencia USDT P2P, con conversión de montos.",
     website_url="https://github.com/abixaiprin/tasas-ve-mcp",
     version="0.1.0",
     instructions=(
@@ -43,6 +43,11 @@ def tasa_p2p(lado: str = "SELL") -> dict:
     return svc().p2p(lado)
 
 
+@mcp.tool(description="Tasas Bs/USD de compra y venta que reporta cada banco venezolano al BCV (Mercantil, Banesco, BNC, Provincial, BanCaribe…) y su promedio.")
+def tasas_bancos() -> dict:
+    return svc().bancos()
+
+
 @mcp.tool(description="Convierte un monto entre VES, USD, EUR y USDT. fuente='bcv' (oficial) o 'p2p' (mercado).")
 def convertir(monto: float, de: str, a: str, fuente: str = "bcv") -> dict:
     return svc().convertir(monto, de, a, fuente)
@@ -70,6 +75,15 @@ async def api_tasas(request: Request):
     except Exception as e:
         datos["p2p"] = {"error": str(e)}
     return _json(datos)
+
+
+@mcp.custom_route("/api/bancos", methods=["GET"])
+async def api_bancos(request: Request):
+    """GET /api/bancos → compra y venta por banco + promedio."""
+    try:
+        return _json(svc().bancos())
+    except Exception as e:
+        return _json({"error": str(e)}, 502)
 
 
 @mcp.custom_route("/api/convertir", methods=["GET"])

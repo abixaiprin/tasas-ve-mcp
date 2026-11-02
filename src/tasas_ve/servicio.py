@@ -7,9 +7,9 @@ import time
 from pathlib import Path
 from typing import Callable
 
-from .fuentes import Tasa, obtener_bcv, obtener_p2p
+from .fuentes import Tasa, obtener_bancos, obtener_bcv, obtener_p2p
 
-TTL = {"bcv": 30 * 60, "p2p": 3 * 60}  # segundos
+TTL = {"bcv": 30 * 60, "p2p": 3 * 60, "bancos": 30 * 60}  # segundos
 
 
 def _ruta_cache() -> Path:
@@ -20,8 +20,9 @@ def _ruta_cache() -> Path:
 class Servicio:
     def __init__(self, bcv: Callable[[], list[Tasa]] = obtener_bcv,
                  p2p: Callable[[str], Tasa] = lambda lado: obtener_p2p(lado),
+                 bancos: Callable[[], dict] = obtener_bancos,
                  ruta: Path | None = None, reloj: Callable[[], float] = time.time):
-        self._bcv, self._p2p, self._reloj = bcv, p2p, reloj
+        self._bcv, self._p2p, self._bancos, self._reloj = bcv, p2p, bancos, reloj
         self._ruta = ruta or _ruta_cache()
         self._mem: dict[str, tuple[float, list[dict]]] = {}
         self._cargar()
@@ -42,13 +43,13 @@ class Servicio:
             pass  # la caché en disco es opcional
 
     # ---- lógica
-    def _obtener(self, clave: str, ttl: int, fn: Callable[[], list[Tasa]]) -> dict:
+    def _obtener(self, clave: str, ttl: int, fn: Callable[[], list], crudo: bool = False) -> dict:
         ahora = self._reloj()
         guardado = self._mem.get(clave)
         if guardado and ahora - guardado[0] < ttl:
             return {"tasas": guardado[1], "desde_cache": True, "aviso": ""}
         try:
-            tasas = [t.dict() for t in fn()]
+            tasas = [t if crudo else t.dict() for t in fn()]
             self._mem[clave] = (ahora, tasas)
             self._guardar()
             return {"tasas": tasas, "desde_cache": False, "aviso": ""}
@@ -64,6 +65,13 @@ class Servicio:
     def p2p(self, lado: str = "SELL") -> dict:
         lado = lado.upper()
         return self._obtener(f"p2p_{lado}", TTL["p2p"], lambda: [self._p2p(lado)])
+
+    def bancos(self) -> dict:
+        """Tasas informativas por banco (compra y venta) y su promedio."""
+        r = self._obtener("bancos", TTL["bancos"], lambda: [self._bancos()], crudo=True)
+        datos = dict(r["tasas"][0])
+        datos.update(desde_cache=r["desde_cache"], aviso=r["aviso"])
+        return datos
 
     def tasa(self, moneda: str, fuente: str = "bcv") -> tuple[float, dict]:
         moneda, fuente = moneda.upper(), fuente.lower()

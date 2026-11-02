@@ -3,7 +3,7 @@
 # tasas-ve-mcp
 
 **Venezuelan exchange rates for your AI assistant, in one line.**
-Official BCV rate (USD, EUR) and the USDT P2P market reference, as an MCP server, a CLI and a Python library.
+Official BCV rate (USD, EUR), **the buy/sell rate reported by each Venezuelan bank** and the USDT P2P market reference, as an MCP server, a CLI and a Python library.
 
 ![tests](https://github.com/abixaiprin/tasas-ve-mcp/actions/workflows/tests.yml/badge.svg) ![license](https://img.shields.io/badge/license-MIT-6A1FD0) ![python](https://img.shields.io/badge/python-3.10%2B-1B0F2E)
 
@@ -37,6 +37,7 @@ Requires [uv](https://docs.astral.sh/uv/) (or `pip install git+https://github.co
 ```bash
 uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve            # BCV + P2P rates
 uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve 100 USD VES
+uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve --bancos   # rate per bank
 uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve 5000 VES USD --p2p
 ```
 
@@ -55,6 +56,7 @@ uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve-mcp --http --
 | Endpoint | Example |
 |---|---|
 | `GET /api/tasas` | BCV + P2P rates |
+| `GET /api/bancos` | Buy/sell per bank + average |
 | `GET /api/convertir` | `/api/convertir?monto=100&de=USD&a=VES&fuente=bcv` |
 | `GET /salud` | health check |
 
@@ -75,6 +77,7 @@ var res = HttpClient.newHttpClient().send(
 | Tool | What it does |
 |---|---|
 | `tasa_bcv` | Official BCV rate: Bs per 1 USD and 1 EUR |
+| `tasas_bancos` | Buy and sell rate (Bs/USD) reported by each bank to the BCV — Mercantil, Banesco, BNC, Provincial, BanCaribe… — plus the average |
 | `tasa_p2p` | USDT/VES market reference (median of P2P ads, `SELL` or `BUY`) |
 | `convertir` | Converts between VES, USD, EUR and USDT using `bcv` or `p2p` |
 | `brecha_cambiaria` | Gap (%) between the official rate and the P2P reference |
@@ -104,7 +107,7 @@ flowchart LR
 ```
 
 ## Data sources and disclaimer
-- **BCV:** public website `bcv.org.ve`. If its TLS certificate can't be verified, the answer says so.
+- **BCV and banks:** public website `bcv.org.ve` (official rate and *Tasas Informativas del Sistema Bancario*). If its TLS certificate can't be verified, the answer says so.
 - **P2P:** public Binance P2P ad listing. It is a **market reference, not an official rate**. Not affiliated with BCV or Binance.
 - Rates are informative. Check the official source before any legal or accounting use.
 

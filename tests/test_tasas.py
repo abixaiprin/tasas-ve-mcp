@@ -107,3 +107,24 @@ def test_api_rest(tmp_path, monkeypatch):
         t = c.get("/api/tasas").json()
         assert t["bcv"]["tasas"][0]["moneda"] == "USD" and t["p2p"]["tasas"][0]["bs"] == 50.0
         assert c.get("/salud").json()["ok"] is True
+
+
+def test_parsear_bancos_portada():
+    from tasas_ve.fuentes import parsear_bancos
+    f = parsear_bancos((FIX / "bancos_portada.html").read_text(encoding="utf-8"))
+    assert [x["banco"] for x in f][:2] == ["Banco Mercantil", "N58 Banco Digital"]
+    assert f[3]["venta"] == 1000.2726 and f[0]["compra"] == 954.6804
+
+
+def test_parsear_bancos_historico_toma_ultima_fecha():
+    from tasas_ve.fuentes import parsear_bancos
+    f = parsear_bancos((FIX / "bancos_historico.html").read_text(encoding="utf-8"))
+    assert {x["fecha"] for x in f} == {"30-10-2026"} and len(f) == 2
+
+
+def test_servicio_bancos(tmp_path):
+    s = Servicio(bcv=lambda: [], p2p=lambda lado: None, ruta=tmp_path / "c.json", reloj=lambda: 1.0,
+                 bancos=lambda: {"bancos": [{"banco": "X", "compra": 1.0, "venta": 2.0, "fecha": ""}],
+                                 "promedio_compra": 1.0, "promedio_venta": 2.0, "obtenida": "t", "detalle": ""})
+    r = s.bancos()
+    assert r["promedio_venta"] == 2.0 and r["desde_cache"] is False
