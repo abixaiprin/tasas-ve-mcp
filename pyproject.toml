@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tasas-ve-mcp"
+version = "0.1.0"
+description = "Tasas de cambio de Venezuela (BCV y USDT P2P) para tu asistente de IA: servidor MCP, CLI y librería en Python."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Abixai Prin" }]
+requires-python = ">=3.10"
+keywords = ["mcp", "bcv", "venezuela", "tasa", "dolar", "exchange-rate", "ai", "claude", "llm"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Topic :: Office/Business :: Financial",
+]
+dependencies = [
+  "mcp>=2,<3",
+  "httpx2>=2",
+  "beautifulsoup4>=4.12",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+tasas-ve = "tasas_ve.cli:main"
+tasas-ve-mcp = "tasas_ve.server:main"
+
+[project.urls]
+Homepage = "https://github.com/abixaiprin/tasas-ve-mcp"
+Author = "https://dev-abixai.netlify.app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tasas_ve"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
