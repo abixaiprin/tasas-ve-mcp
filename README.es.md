@@ -7,10 +7,10 @@ Tasa oficial del BCV (USD, EUR) y la referencia de mercado USDT P2P, como servid
 
 [English](README.md) · [Español](README.es.md)
 
-> *Conversación de ejemplo (cifras ilustrativas):*
->
 > **Tú:** ¿Cuánto son 250 dólares en bolívares hoy?
-> **Claude:** A la tasa oficial del BCV de hoy (Bs 36,59 por USD, 2 nov. 2026), USD 250 = **Bs 9.146,85**. La referencia USDT P2P está en Bs 50,20, una brecha de 37 %.
+> **Claude:** A la tasa oficial del BCV (Bs 889,58 por USD, 2 nov. 2026), USD 250 = **Bs 222.393,85**. La referencia USDT P2P está en Bs 1.003,90, una brecha de 12,85 %.
+
+<p align="center"><img src="assets/terminal.png" alt="tasas-ve en la terminal con tasas reales del 2 nov. 2026" width="80%"></p>
 
 ## Por qué
 - **Tu asistente deja de adivinar.** Los modelos no saben la tasa de hoy; esto le da el número real, con fuente y fecha.

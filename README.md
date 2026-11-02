@@ -9,10 +9,10 @@ Official BCV rate (USD, EUR) and the USDT P2P market reference, as an MCP server
 
 [English](README.md) · [Español](README.es.md)
 
-> *Example conversation (illustrative figures):*
->
 > **You:** How much is 250 dollars in bolívares today?
-> **Claude:** At today's BCV official rate (Bs 36.59 per USD, 2 Nov 2026), USD 250 = **Bs 9,146.85**. The USDT P2P reference is Bs 50.20, a 37 % gap.
+> **Claude:** At the BCV official rate (Bs 889.58 per USD, 2 Nov 2026), USD 250 = **Bs 222,393.85**. The USDT P2P reference is Bs 1,003.90, a 12.85 % gap.
+
+<p align="center"><img src="assets/terminal.png" alt="tasas-ve in the terminal with real rates from 2 Nov 2026" width="80%"></p>
 
 ## Why
 - **Your assistant stops guessing.** LLMs don't know today's rate; this gives it the real number with source and timestamp.
@@ -44,7 +44,7 @@ uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve 5000 VES USD 
 ```python
 from tasas_ve import Servicio
 s = Servicio()
-s.convertir(100, "USD", "VES")      # {'resultado': 3658.74, 'tasa_usada': 36.5874, ...}
+s.convertir(100, "USD", "VES")      # {'resultado': 88957.54, 'tasa_usada': 889.5754, ...}
 ```
 
 ## Use it from any app (React, Vue, Java, PHP…)
