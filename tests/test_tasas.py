@@ -93,3 +93,17 @@ def test_llamar_herramienta_por_mcp(tmp_path, monkeypatch):
     r = anyio.run(server.mcp.call_tool, "convertir", {"monto": 25, "de": "USD", "a": "VES"})
     texto = json.dumps(r, default=str)
     assert "1000.0" in texto
+
+
+def test_api_rest(tmp_path, monkeypatch):
+    from starlette.testclient import TestClient
+    from tasas_ve import server
+    monkeypatch.setattr(server, "_svc", _svc(tmp_path))
+    with TestClient(server.app()) as c:
+        r = c.get("/api/convertir", params={"monto": 10, "de": "USD", "a": "VES"})
+        assert r.status_code == 200 and r.json()["resultado"] == 400.0
+        assert r.headers["access-control-allow-origin"] == "*"
+        assert c.get("/api/convertir").status_code == 400
+        t = c.get("/api/tasas").json()
+        assert t["bcv"]["tasas"][0]["moneda"] == "USD" and t["p2p"]["tasas"][0]["bs"] == 50.0
+        assert c.get("/salud").json()["ok"] is True

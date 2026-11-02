@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/banner.svg" alt="tasas-ve-mcp — Abixai Prin" width="100%"></p>
+
 # tasas-ve-mcp
 
 **Venezuelan exchange rates for your AI assistant, in one line.**
@@ -19,23 +21,23 @@ Official BCV rate (USD, EUR) and the USDT P2P market reference, as an MCP server
 
 ## Quick start
 
-Requires [uv](https://docs.astral.sh/uv/) (or use `pip install tasas-ve-mcp`).
+Requires [uv](https://docs.astral.sh/uv/) (or `pip install git+https://github.com/abixaiprin/tasas-ve-mcp`).
 
 **VS Code** — `.vscode/mcp.json`
 ```json
-{ "servers": { "tasas-ve": { "command": "uvx", "args": ["tasas-ve-mcp"] } } }
+{ "servers": { "tasas-ve": { "command": "uvx", "args": ["--from", "git+https://github.com/abixaiprin/tasas-ve-mcp", "tasas-ve-mcp"] } } }
 ```
 
 **Claude Desktop / Cursor** — MCP config
 ```json
-{ "mcpServers": { "tasas-ve": { "command": "uvx", "args": ["tasas-ve-mcp"] } } }
+{ "mcpServers": { "tasas-ve": { "command": "uvx", "args": ["--from", "git+https://github.com/abixaiprin/tasas-ve-mcp", "tasas-ve-mcp"] } } }
 ```
 
 **Terminal**
 ```bash
-uvx --from tasas-ve-mcp tasas-ve            # BCV + P2P rates
-uvx --from tasas-ve-mcp tasas-ve 100 USD VES
-uvx --from tasas-ve-mcp tasas-ve 5000 VES USD --p2p
+uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve            # BCV + P2P rates
+uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve 100 USD VES
+uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve 5000 VES USD --p2p
 ```
 
 **Python**
@@ -45,6 +47,30 @@ s = Servicio()
 s.convertir(100, "USD", "VES")      # {'resultado': 3658.74, 'tasa_usada': 36.5874, ...}
 ```
 
+## Use it from any app (React, Vue, Java, PHP…)
+Run it as a small web service and call it over HTTP. It also exposes **remote MCP** at `/mcp`.
+```bash
+uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve-mcp --http --port 8000
+```
+| Endpoint | Example |
+|---|---|
+| `GET /api/tasas` | BCV + P2P rates |
+| `GET /api/convertir` | `/api/convertir?monto=100&de=USD&a=VES&fuente=bcv` |
+| `GET /salud` | health check |
+
+**React / Vue / any JS**
+```js
+const r = await fetch("https://YOUR-SERVICE/api/convertir?monto=100&de=USD&a=VES");
+const { resultado, tasa_usada } = await r.json();
+```
+**Java**
+```java
+var res = HttpClient.newHttpClient().send(
+  HttpRequest.newBuilder(URI.create("https://YOUR-SERVICE/api/tasas")).build(),
+  HttpResponse.BodyHandlers.ofString());
+```
+**Deploy for free:** the repo includes `render.yaml` — on [Render](https://render.com) choose *New → Blueprint* and pick this repo.
+
 ## Tools
 | Tool | What it does |
 |---|---|
@@ -52,6 +78,12 @@ s.convertir(100, "USD", "VES")      # {'resultado': 3658.74, 'tasa_usada': 36.58
 | `tasa_p2p` | USDT/VES market reference (median of P2P ads, `SELL` or `BUY`) |
 | `convertir` | Converts between VES, USD, EUR and USDT using `bcv` or `p2p` |
 | `brecha_cambiaria` | Gap (%) between the official rate and the P2P reference |
+
+## For teams and companies
+- **One source of truth for the rate.** Your apps, spreadsheets and AI assistants read the same number, with source and timestamp — no more copying it by hand every morning.
+- **Plug it into what you already use:** Claude, Cursor or VS Code via MCP; React, Vue, Java or PHP via the REST API.
+- **Self-hosted and auditable.** It's open source, it only reads public pages and it sends no data about your company.
+- **Resilient.** If the source goes down, your systems keep the last known value instead of breaking.
 
 ## Cost & performance
 | | |
@@ -95,7 +127,13 @@ I adapt tools like this to your company: integrations with your systems, payment
 → [dev-abixai.netlify.app](https://dev-abixai.netlify.app) · dev.abixai.martinez@gmail.com
 
 ## Support
-⭐ **Star the repo** if it saved you time — it helps others find it.
+If this saved you time:
+- ⭐ **Star the repo** — it helps other developers find it.
+- ☕ **[Buy me a coffee on Ko-fi](https://ko-fi.com/abixaiprin)** — keeps new tools coming.
+- 🔁 Share it with a team that still copies the rate by hand.
 
 ## License
-MIT © 2026 Abixai Prin
+MIT © 2026 [Abixai Prin](https://dev-abixai.netlify.app). You can use, modify and share it; keep the copyright notice.
+
+---
+<p align="center"><sub>Made in Caracas by <b>Abixai Prin</b> · <i>I build tools that save people time.</i></sub></p>

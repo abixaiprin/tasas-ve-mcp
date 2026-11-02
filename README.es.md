@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/banner.svg" alt="tasas-ve-mcp — Abixai Prin" width="100%"></p>
+
 # tasas-ve-mcp
 
 **Las tasas de Venezuela para tu asistente de IA, en una línea.**
@@ -17,24 +19,42 @@ Tasa oficial del BCV (USD, EUR) y la referencia de mercado USDT P2P, como servid
 
 ## Empezar
 
-Necesitas [uv](https://docs.astral.sh/uv/) (o `pip install tasas-ve-mcp`).
+Necesitas [uv](https://docs.astral.sh/uv/) (o `pip install git+https://github.com/abixaiprin/tasas-ve-mcp`).
 
 **VS Code** — `.vscode/mcp.json`
 ```json
-{ "servers": { "tasas-ve": { "command": "uvx", "args": ["tasas-ve-mcp"] } } }
+{ "servers": { "tasas-ve": { "command": "uvx", "args": ["--from", "git+https://github.com/abixaiprin/tasas-ve-mcp", "tasas-ve-mcp"] } } }
 ```
 
 **Claude Desktop / Cursor**
 ```json
-{ "mcpServers": { "tasas-ve": { "command": "uvx", "args": ["tasas-ve-mcp"] } } }
+{ "mcpServers": { "tasas-ve": { "command": "uvx", "args": ["--from", "git+https://github.com/abixaiprin/tasas-ve-mcp", "tasas-ve-mcp"] } } }
 ```
 
 **Terminal**
 ```bash
-uvx --from tasas-ve-mcp tasas-ve
-uvx --from tasas-ve-mcp tasas-ve 100 USD VES
-uvx --from tasas-ve-mcp tasas-ve 5000 VES USD --p2p
+uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve
+uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve 100 USD VES
+uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve 5000 VES USD --p2p
 ```
+
+## Úsalo desde cualquier app (React, Vue, Java, PHP…)
+Ejecútalo como un pequeño servicio web y llámalo por HTTP. También ofrece **MCP remoto** en `/mcp`.
+```bash
+uvx --from git+https://github.com/abixaiprin/tasas-ve-mcp tasas-ve-mcp --http --port 8000
+```
+| Endpoint | Ejemplo |
+|---|---|
+| `GET /api/tasas` | Tasas BCV y P2P |
+| `GET /api/convertir` | `/api/convertir?monto=100&de=USD&a=VES&fuente=bcv` |
+| `GET /salud` | Estado del servicio |
+
+```js
+// React, Vue o cualquier JavaScript
+const r = await fetch("https://TU-SERVICIO/api/convertir?monto=100&de=USD&a=VES");
+const { resultado, tasa_usada } = await r.json();
+```
+**Despliegue gratis:** el repo trae `render.yaml`. En [Render](https://render.com) elige *New → Blueprint* y selecciona este repo.
 
 ## Herramientas
 | Herramienta | Qué hace |
@@ -43,6 +63,12 @@ uvx --from tasas-ve-mcp tasas-ve 5000 VES USD --p2p
 | `tasa_p2p` | Referencia USDT/VES (mediana de anuncios P2P, venta o compra) |
 | `convertir` | Convierte entre VES, USD, EUR y USDT con `bcv` o `p2p` |
 | `brecha_cambiaria` | Diferencia (%) entre la tasa oficial y la referencia P2P |
+
+## Para equipos y empresas
+- **Una sola fuente para la tasa.** Tus apps, hojas de cálculo y asistentes de IA leen el mismo número, con fuente y fecha. Se acabó copiarlo a mano cada mañana.
+- **Se conecta con lo que ya usas:** Claude, Cursor o VS Code por MCP; React, Vue, Java o PHP por la API REST.
+- **Lo alojas tú y es auditable.** Es código abierto, solo lee páginas públicas y no envía datos de tu empresa.
+- **No se cae contigo.** Si la fuente falla, tus sistemas siguen con el último valor conocido.
 
 ## Fuentes y aviso
 - **BCV:** página pública `bcv.org.ve`. Si su certificado TLS no se puede verificar, la respuesta lo indica.
@@ -53,7 +79,13 @@ uvx --from tasas-ve-mcp tasas-ve 5000 VES USD --p2p
 Adapto herramientas como esta a tu negocio: integración con tus sistemas, pagos, asistentes con IA y soporte.
 → [dev-abixai.netlify.app](https://dev-abixai.netlify.app) · dev.abixai.martinez@gmail.com
 
-⭐ **Dale una estrella** si te ahorró tiempo.
+## Apoya el proyecto
+- ⭐ **Dale una estrella** al repo: ayuda a que otros lo encuentren.
+- ☕ **[Invítame un café en Ko-fi](https://ko-fi.com/abixaiprin)** para que sigan saliendo herramientas.
+- 🔁 Compártelo con un equipo que todavía copia la tasa a mano.
 
 ## Licencia
-MIT © 2026 Abixai Prin
+MIT © 2026 [Abixai Prin](https://dev-abixai.netlify.app). Puedes usarlo, modificarlo y compartirlo manteniendo el aviso de derechos de autor.
+
+---
+<p align="center"><sub>Hecho en Caracas por <b>Abixai Prin</b> · <i>I build tools that save people time.</i></sub></p>
