@@ -12,6 +12,9 @@ Tasa oficial del BCV (USD, EUR), **la tasa de compra y venta de cada banco venez
 
 <p align="center"><img src="assets/terminal.png" alt="tasas-ve en la terminal con tasas reales del 2 nov. 2026" width="80%"></p>
 
+
+> 🧩 **También disponible como skill para agentes en [Agensi](https://www.agensi.io/skills/tasas-ve-venezuela-exchange-rates-bcv-banks-p2p)**: instálala en Claude Code, Cursor y más de 20 agentes.
+
 ## Por qué
 - **Tu asistente deja de adivinar.** Los modelos no saben la tasa de hoy; esto le da el número real, con fuente y fecha.
 - **Rápido y barato.** Una sola llamada pequeña y el cálculo se hace en local: casi no gasta tokens.
