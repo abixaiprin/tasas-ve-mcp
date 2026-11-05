@@ -15,7 +15,7 @@ Official BCV rate (USD, EUR), **the buy/sell rate reported by each Venezuelan ba
 <p align="center"><img src="assets/terminal.png" alt="tasas-ve in the terminal with real rates from 2 Nov 2026" width="80%"></p>
 
 
-> 🧩 **Also available as an agent skill on [Agensi](https://www.agensi.io/skills/tasas-ve-venezuela-exchange-rates-bcv-banks-p2p)**: install it in Claude Code, Cursor and 20+ agents.
+> 🧩 **Also available as an agent skill on [Agensi](https://www.agensi.io/skills/tasas-ve-venezuela-exchange-rates-bcv-banks-p2p)**: install it in Claude Code, Cursor and 20+ agents. [See all my skills](https://www.agensi.io/creators/abixai-prin).
 
 ## Why
 - **Your assistant stops guessing.** LLMs don't know today's rate; this gives it the real number with source and timestamp.
